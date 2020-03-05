@@ -3,7 +3,7 @@ import { Post } from "../models/Post"
 export const getPosts = async (req, res, next) => {
   try {
     const posts = await Post.fetchAll()
-    return res.json(posts)
+    res.json(posts)
   } catch (e) {
     next(e)
   }

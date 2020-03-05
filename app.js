@@ -12,7 +12,6 @@ app.use(cors())
 app.use(express.json({ extended: true }))
 app.use("", routes)
 app.use((err, req, res, next) => {
-  console.log(err)
   res.status(500).json({ message: err.message })
 })
 
