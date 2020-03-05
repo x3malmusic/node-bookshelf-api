@@ -1,7 +1,6 @@
-import { Router } from "express"
 import { getPosts, addPost, updatePost, deletePost } from "./postsController"
-
-const router = new Router()
+import route from "express-promise-router"
+const router = route()
 
 router.get("/posts", getPosts)
 router.post("/posts", addPost)
