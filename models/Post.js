@@ -1,7 +1,5 @@
-const bookshelf = require("../bookshelf");
+import bookshelf from "../bookshelf"
 
-const Post = bookshelf.model("Post", {
-  tableName: "post"
-});
-
-module.exports = Post;
+export const Post = bookshelf.model("Post", {
+  tableName: "posts"
+})

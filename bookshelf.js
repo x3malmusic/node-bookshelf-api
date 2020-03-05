@@ -1,13 +1,5 @@
-const knex = require("knex")({
-  client: "pg",
-  connection: {
-    host: "127.0.0.1",
-    user: "developer",
-    password: "new_password",
-    database: "postgres",
-    charset: "utf8"
-  }
-});
-const bookshelf = require("bookshelf")(knex);
+import knex from "knex"
+import bookshelf from "bookshelf"
+const knexConfig = require("./knexfile")
 
-module.exports = bookshelf;
+export default bookshelf(knex(knexConfig))
