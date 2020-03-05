@@ -10,23 +10,27 @@ export const getPosts = async (req, res) => {
 }
 
 export const addPost = async (req, res) => {
-  try {
-    const { title, content } = req.body
-    await Post.forge({ title, content }).save()
-  } catch (e) {
-    return res.send(e.message)
+  if (!req.body.isEmpty) {
+    try {
+      const { title, content } = req.body
+      await Post.forge({ title, content }).save()
+    } catch (e) {
+      return res.send(e.message)
+    }
+    res.status(200).send("added")
   }
-  res.send("added")
 }
 
 export const updatePost = async (req, res) => {
-  try {
-    const { title, content } = req.body
-    await Post.where({ id: req.params.id }).save({ title, content }, { patch: true })
-  } catch (e) {
-    return res.send(e.message)
+  if (!req.body.isEmpty) {
+    try {
+      const { title, content } = req.body
+      await Post.where({ id: req.params.id }).save({ title, content }, { patch: true })
+    } catch (e) {
+      return res.send(e.message)
+    }
+    res.status(200).send("updated")
   }
-  res.send("update")
 }
 
 export const deletePost = async (req, res) => {
@@ -35,5 +39,5 @@ export const deletePost = async (req, res) => {
   } catch (e) {
     return res.send(e.message)
   }
-  res.send("deleted")
+  res.status(200).send("deleted")
 }
