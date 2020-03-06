@@ -3,11 +3,6 @@ import jwt from "jsonwebtoken";
 import { validationResult } from "express-validator";
 import { User } from "../../models/User";
 
-const createUser = async (email, password, name) => {
-  const hashedPassword = await bcrypt.hash(password, 12);
-  await User.forge({ email, password: hashedPassword, name }).save();
-};
-
 export const register = async (req, res, next) => {
   try {
     const errors = validationResult(req);
@@ -20,21 +15,25 @@ export const register = async (req, res, next) => {
     const { email, password, name } = req.body;
 
     const candidate = await User.where({ email })
-      .fetch()
-      .catch(e => {
-        if (e.message === "EmptyResponse") {
-          createUser(email, password, name);
-          return res.status(201).json({ message: "User created" });
-        }
-        next(e);
+      .fetch({ require: false })
+      .catch(e => next(e));
+
+    if (!candidate) {
+      const hashedPassword = await bcrypt.hash(password, 12);
+      await User.forge({ email, password: hashedPassword, name }).save();
+      const user = await User.where({ email }).fetch({ require: false });
+
+      const token = jwt.sign({ userId: user.id }, process.env.jwtSecret, {
+        expiresIn: "1h"
       });
+
+      return res.json({ message: "User created", token, userId: user.id });
+    }
 
     if (candidate.attributes.email === email) {
       res.status(400).json({ message: "User already exist" });
     }
-  } catch (e) {
-    next(e);
-  }
+  } catch (e) {}
 };
 
 export const login = async (req, res, next) => {
@@ -49,13 +48,12 @@ export const login = async (req, res, next) => {
 
     const { email, password } = req.body;
     const user = await User.where({ email })
-      .fetch()
-      .catch(e => {
-        if (e.message === "EmptyResponse") {
-          return res.status(400).json({ message: "User not found" });
-        }
-        next(e);
-      });
+      .fetch({ require: false })
+      .catch(e => next(e));
+
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
 
     const isMatch = await bcrypt.compare(password, user.attributes.password);
 
@@ -70,7 +68,5 @@ export const login = async (req, res, next) => {
     });
 
     res.json({ token, userId: user.id });
-  } catch (e) {
-    next(e);
-  }
+  } catch (e) {}
 };
