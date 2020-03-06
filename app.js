@@ -14,7 +14,7 @@ app.use(express.json({ extended: true }));
 app.use("", posts);
 app.use("/auth", auth);
 app.use((err, req, res, next) => {
-  res.status(500).json({ message: err.message });
+  // res.status(500).json({ message: err.message });
 });
 
 app.listen(port, () => {

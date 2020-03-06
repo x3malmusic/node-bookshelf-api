@@ -1,43 +1,50 @@
-import { Post } from "../../models/Post"
+import { Post } from "../../models/Post";
 
 export const getPosts = async (req, res, next) => {
   try {
-    const posts = await Post.fetchAll()
-    res.json(posts)
+    const posts = await Post.fetchAll();
+    res.json(posts);
   } catch (e) {
-    next(e)
+    next(e);
   }
-}
+};
 
 export const addPost = async (req, res, next) => {
   if (!req.body.isEmpty) {
     try {
-      const { title, content } = req.body
-      await Post.forge({ title, content }).save()
+      const { title, content } = req.body;
+      await Post.forge({ title, content }).save();
     } catch (e) {
-      next(e)
+      next(e);
     }
-    res.status(200).send("added")
+    res.status(200).send("added");
   }
-}
+};
 
 export const updatePost = async (req, res, next) => {
   if (!req.body.isEmpty) {
     try {
-      const { title, content } = req.body
-      await Post.where({ id: req.params.id }).save({ title, content }, { patch: true })
+      const { title, content } = req.body;
+      await Post.where({ id: req.params.id }).save(
+        {
+          title,
+          content,
+          updated_at: new Date(new Date().getTime())
+        },
+        { patch: true }
+      );
     } catch (e) {
-      next(e)
+      next(e);
     }
-    res.status(200).send("updated")
+    res.status(200).send("updated");
   }
-}
+};
 
 export const deletePost = async (req, res, next) => {
   try {
-    await Post.where({ id: req.params.id }).destroy()
+    await Post.where({ id: req.params.id }).destroy();
   } catch (e) {
-    next(e)
+    next(e);
   }
-  res.status(200).send("deleted")
-}
+  res.status(200).send("deleted");
+};

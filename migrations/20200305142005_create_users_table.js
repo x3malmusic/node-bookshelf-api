@@ -3,16 +3,16 @@ exports.up = knex => {
     table
       .increments("id")
       .unsigned()
-      .primary()
+      .primary();
     table
       .string("email")
       .notNullable()
-      .unique()
-    table.string("password").notNullable()
-    table.string("name")
-  })
-}
+      .unique();
+    table.string("password").notNullable();
+    table.string("user_name");
+  });
+};
 
 exports.down = knex => {
-  return knex.schema.dropTable("posts")
-}
+  return knex.schema.dropTable("posts");
+};

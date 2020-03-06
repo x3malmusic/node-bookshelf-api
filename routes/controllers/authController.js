@@ -27,7 +27,9 @@ export const register = async (req, res, next) => {
         expiresIn: "1h"
       });
 
-      return res.json({ message: "User created", token, userId: user.id });
+      return res
+        .status(201)
+        .json({ message: "User created", token, userId: user.id });
     }
 
     if (candidate.attributes.email === email) {
