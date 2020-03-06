@@ -6,6 +6,10 @@ exports.up = knex => {
       .primary()
     table.string("title").notNullable()
     table.string("content").notNullable()
+    table
+      .integer("user_id")
+      .references("id")
+      .inTable("users")
   })
 }
 
