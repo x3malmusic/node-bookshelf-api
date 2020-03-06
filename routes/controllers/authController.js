@@ -12,7 +12,7 @@ export const register = async (req, res, next) => {
         message: "Email is not valid or password is too short"
       });
     }
-    const { email, password, name } = req.body;
+    const { email, password } = req.body;
 
     const candidate = await User.where({ email })
       .fetch({ require: false })
@@ -20,7 +20,8 @@ export const register = async (req, res, next) => {
 
     if (!candidate) {
       const hashedPassword = await bcrypt.hash(password, 12);
-      await User.forge({ email, password: hashedPassword, name }).save();
+      await User.forge({ email, password: hashedPassword }).save();
+
       const user = await User.where({ email }).fetch({ require: false });
 
       const token = jwt.sign({ userId: user.id }, process.env.jwtSecret, {

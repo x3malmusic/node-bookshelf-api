@@ -1,13 +1,11 @@
 <template>
   <div style="padding: 10px">
-    <vs-navbar
-      class="nabarx"
-      style="display: flex; align-items: center; height: 75px; margin-bottom: 15px"
+    <nav
+      style="display: flex; justify-content: space-between ;align-items: center; padding: 10px; margin-bottom: 15px; border-radius: 10px"
     >
-      <vs-navbar-title>
+        <h3>Huitter</h3>
         <vs-button class="large">Log Out</vs-button>
-      </vs-navbar-title>
-    </vs-navbar>
+    </nav>
     <vs-row>
       <vs-col
         type="flex"

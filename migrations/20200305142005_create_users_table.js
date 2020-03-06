@@ -9,7 +9,6 @@ exports.up = knex => {
       .notNullable()
       .unique();
     table.string("password").notNullable();
-    table.string("user_name");
   });
 };
 

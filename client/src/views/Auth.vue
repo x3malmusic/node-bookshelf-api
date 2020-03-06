@@ -1,5 +1,5 @@
 <template>
-  <vs-card class="card">
+  <vs-card class="card ">
     <div slot="header">
       <h3>Authorization</h3>
     </div>
@@ -15,7 +15,6 @@
       placeholder="Password"
       v-model="password"
     />
-
     <vs-button color="primary" class="mr" @click="register">Register</vs-button>
     <vs-button color="success" color-text="rgb(50,50,50)" @click="login"
       >Enter</vs-button
