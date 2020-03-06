@@ -9,12 +9,15 @@
   "author": "Jack",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "bookshelf": "^1.1.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "esm": "^3.2.25",
     "express": "^4.17.1",
     "express-promise-router": "^3.0.3",
+    "express-validator": "^6.4.0",
+    "jsonwebtoken": "^8.5.1",
     "knex": "^0.20.10",
     "pg": "^7.18.2"
   },

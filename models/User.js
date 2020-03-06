@@ -1,5 +1,5 @@
 import bookshelf from "../bookshelf";
 
-export const Post = bookshelf.model("User", {
+export const User = bookshelf.model("User", {
   tableName: "users"
 });
