@@ -36,24 +36,55 @@ export default {
     ...mapMutations(["setToken", "setUserId"]),
 
     async register() {
-      const res = await http("/auth/register", "POST", {
+      await http("/auth/register", "POST", {
         email: this.email,
         password: this.password
-      });
-
-      this.setToken(res.token);
-      this.setUserId(res.userId);
-      this.$router.push("/posts");
+      })
+        .then(res => {
+          this.setToken(res.token);
+          this.setUserId(res.userId);
+          this.$router.push("/posts");
+          this.$vs.notify({
+            position: "top-right",
+            color: "success",
+            title: "Logged In",
+            text: "Welcome user"
+          });
+        })
+        .catch(e => {
+          this.$vs.notify({
+            position: "top-right",
+            color: "danger",
+            title: "Error",
+            text: e.message
+          });
+        });
     },
 
     async login() {
-      const res = await http("/auth/login", "POST", {
+      await http("/auth/login", "POST", {
         email: this.email,
         password: this.password
-      });
-      this.setToken(res.token);
-      this.setUserId(res.userId);
-      this.$router.push("/posts");
+      })
+        .then(res => {
+          this.setToken(res.token);
+          this.setUserId(res.userId);
+          this.$router.push("/posts");
+          this.$vs.notify({
+            position: "top-right",
+            color: "success",
+            title: "Logged In",
+            text: "Welcome user"
+          });
+        })
+        .catch(e => {
+          this.$vs.notify({
+            position: "top-right",
+            color: "danger",
+            title: "Error",
+            text: e.message
+          });
+        });
     }
   }
 };

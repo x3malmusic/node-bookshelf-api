@@ -1,46 +1,92 @@
 <template>
   <div style="padding: 10px">
-    <nav
-      style="display: flex; justify-content: space-between ;align-items: center; padding: 10px; margin-bottom: 15px; border-radius: 10px"
-    >
-        <h3>Huitter</h3>
-        <vs-button class="large">Log Out</vs-button>
+    <nav class="bg-gray-200 flex justify-between items-center p-4 mb-6 rounded">
+      <h3>Huitter</h3>
+      <vs-button class="large" @click="logOut">Log Out</vs-button>
     </nav>
-    <vs-row>
-      <vs-col
-        type="flex"
-        vs-justify="center"
-        vs-align="center"
-        vs-w="2"
-        v-if="!todos.length"
-      >
+
+    <vs-row class="justify-center flex-col items-center">
+      <vs-col vs-w="2" v-if="!posts.length">
         <vs-card>
           <div slot="header">
             <h3>
-              No todos!
+              No posts!
             </h3>
           </div>
         </vs-card>
       </vs-col>
 
-      <vs-col type="flex" vs-align="center" vs-w="2" v-if="todos.length">
-        <vs-card v-for="todo in todos" :key="todo.id">
-          <div slot="header">
-            <h3>
-              {{ todo.title }}
-            </h3>
+      <vs-col vs-w="4" v-if="posts && posts.length">
+        <vs-card v-for="post in posts" :key="post.id">
+          <div slot="header" class="flex justify-between">
+            <input
+              type="text"
+              class="font-bold w-full"
+              :ref="`postTitle${post.id}`"
+              :disabled="postId !== post.id"
+              :class="postId === post.id ? 'bg-gray-200' : 'bg-transparent'"
+              :value="post.title"
+            />
+            <vs-button @click="deletePost(post.id)" color="danger" class="small"
+              >X</vs-button
+            >
           </div>
-          <vs-row v-for="point in todo.points" style="margin-bottom: 10px">
-            <span>{{ point.name }} </span>
-            <vs-checkbox
-              v-model="point.done"
-              style="margin-left: auto"
-              icon=" "
-            ></vs-checkbox>
-          </vs-row>
+          <div
+            :ref="`postContent${post.id}`"
+            :contenteditable="postId === post.id"
+            v-html="post.content"
+            :class="
+              postId === post.id
+                ? 'bg-gray-200 border border-solid border-blue-500 rounded'
+                : null
+            "
+          >
+            <!--            {{ post.content }}-->
+          </div>
+          <vs-button
+            @click="acceptPost(post)"
+            class="medium px-8 mt-4 mr-2"
+            v-if="postId === post.id"
+            >Accept</vs-button
+          >
+          <vs-button
+            @click="cancelPost(post)"
+            class="medium px-8 mt-4"
+            v-if="postId === post.id"
+            >Cancel</vs-button
+          >
+          <vs-button
+            @click="editPost(post)"
+            class="medium px-8 mt-4"
+            v-if="!(postId === post.id)"
+            >Edit</vs-button
+          >
         </vs-card>
       </vs-col>
+
+      <vs-col vs-w="4" class="flex justify-center">
+        <vs-button class="medium px-16" @click="addPostPopupActive = true"
+          >Add Post</vs-button
+        >
+      </vs-col>
     </vs-row>
+
+    <vs-popup
+      class="holamundo"
+      title="Add new post"
+      :active.sync="addPostPopupActive"
+    >
+      <vs-input
+        class="mb-4 w-full"
+        placeholder="Title"
+        v-model="newPostTitle"
+      ></vs-input>
+      <vs-textarea label="Leave a message" v-model="newPostContent" />
+      <vs-button @click="addPost" class="mr-2 px-8">Accept</vs-button>
+      <vs-button @click="addPostPopupActive = false" class="px-8"
+        >Cancel</vs-button
+      >
+    </vs-popup>
   </div>
 </template>
 
@@ -48,19 +94,122 @@
 import { http } from "../http.js";
 
 export default {
-  name: "Todos",
+  name: "Posts",
   data: () => ({
-    todos: [
-      {
-        id: 1,
-        title: "title1",
-        points: [
-          { id: 1, name: "point1", done: false },
-          { id: 2, name: "point2", done: false },
-          { id: 3, name: "point3", done: true }
-        ]
-      }
-    ]
-  })
+    posts: [],
+    postId: null,
+    postTitle: "",
+    postContent: "",
+    addPostPopupActive: false,
+    newPostTitle: "",
+    newPostContent: ""
+  }),
+  methods: {
+    logOut() {
+      this.$router.push("/");
+    },
+
+    async addPost() {
+      await http(`/${this.$store.state.userId}/posts`, "POST", {
+        title: this.newPostTitle,
+        content: this.newPostContent
+      })
+        .then(res => {
+          this.$vs.notify({
+            position: "top-right",
+            color: "success",
+            title: "Success",
+            text: res.message
+          });
+          this.addPostPopupActive = false;
+          this.loadPosts();
+        })
+        .catch(e => {
+          this.$vs.notify({
+            color: "danger",
+            title: "Error",
+            text: e.message
+          });
+        });
+    },
+
+    deletePost(id) {
+      this.$vs.dialog({
+        type: "confirm",
+        color: "danger",
+        title: `Confirm`,
+        text: "Are you sure want to delete this post",
+        accept: async () => {
+          await http(`/posts/${id}`, "DELETE")
+            .then(res => {
+              this.$vs.notify({
+                position: "top-right",
+                color: "success",
+                title: "Success",
+                text: res.message
+              });
+              this.loadPosts();
+            })
+            .catch(e => {
+              this.$vs.notify({
+                position: "top-right",
+                color: "danger",
+                title: "Error",
+                text: e.message
+              });
+            });
+        }
+      });
+    },
+
+    editPost(post) {
+      this.postId = post.id;
+      this.postTitle = this.$refs[`postTitle${post.id}`][0].value;
+      this.postContent = this.$refs[`postContent${post.id}`][0].innerHTML;
+      post.editable = true;
+    },
+
+    async acceptPost(post) {
+      await http(`/posts/${post.id}`, "PUT", {
+        title: this.$refs[`postTitle${post.id}`][0].value,
+        content: this.$refs[`postContent${post.id}`][0].innerHTML.trim()
+      })
+        .then(res => {
+          this.postContent = "";
+          this.postId = null;
+          this.$vs.notify({
+            position: "top-right",
+            color: "success",
+            title: "Success",
+            text: res.message
+          });
+        })
+        .catch(e => {
+          this.$vs.notify({
+            position: "top-right",
+            color: "danger",
+            title: "Error",
+            text: e.message
+          });
+        });
+    },
+
+    cancelPost(post) {
+      post.content = this.postContent;
+      this.postContent = "";
+      this.postId = null;
+    },
+
+    async loadPosts() {
+      this.$vs.loading();
+      setTimeout(async () => {
+        this.posts = await http(`/${this.$store.state.userId}/posts`, "GET");
+        this.$vs.loading.close();
+      }, 1000);
+    }
+  },
+  mounted() {
+    this.loadPosts();
+  }
 };
 </script>

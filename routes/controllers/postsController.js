@@ -2,7 +2,9 @@ import { Post } from "../../models/Post";
 
 export const getPosts = async (req, res, next) => {
   try {
-    const posts = await Post.fetchAll();
+    const posts = await Post.where({ user_id: req.params.userId }).fetchAll({
+      require: false
+    });
     res.json(posts);
   } catch (e) {
     next(e);
@@ -10,33 +12,43 @@ export const getPosts = async (req, res, next) => {
 };
 
 export const addPost = async (req, res, next) => {
-  if (!req.body.isEmpty) {
-    try {
-      const { title, content } = req.body;
-      await Post.forge({ title, content }).save();
-    } catch (e) {
-      next(e);
+  try {
+    const { title, content } = req.body;
+    if (title && title.length > 3) {
+      await Post.forge({ user_id: req.params.userId, title, content }).save();
+    } else {
+      res
+        .status(400)
+        .json({ message: "Title cannot be shorter than 3 characters" });
     }
-    res.status(200).send("added");
+  } catch (e) {
+    next(e);
   }
+  res.status(201).json({ message: "Post added" });
 };
 
 export const updatePost = async (req, res, next) => {
   if (!req.body.isEmpty) {
     try {
       const { title, content } = req.body;
-      await Post.where({ id: req.params.id }).save(
-        {
-          title,
-          content,
-          updated_at: new Date(new Date().getTime())
-        },
-        { patch: true }
-      );
+      if (title && title.length > 3) {
+        await Post.where({ id: req.params.id }).save(
+          {
+            title,
+            content,
+            updated_at: new Date(new Date().getTime())
+          },
+          { patch: true }
+        );
+      } else {
+        res
+          .status(400)
+          .json({ message: "Title cannot be shorter than 3 characters" });
+      }
     } catch (e) {
       next(e);
     }
-    res.status(200).send("updated");
+    res.status(200).json({ message: "Post updated" });
   }
 };
 
@@ -46,5 +58,5 @@ export const deletePost = async (req, res, next) => {
   } catch (e) {
     next(e);
   }
-  res.status(200).send("deleted");
+  res.status(200).json({ message: "Post deleted" });
 };
