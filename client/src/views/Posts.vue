@@ -104,13 +104,32 @@ export default {
     newPostContent: ""
   }),
   methods: {
-    logOut() {
-      this.$router.push("/");
+    async logOut() {
+      await http
+        .post("/auth/logout")
+        .then(({ data }) => {
+          this.$vs.notify({
+            position: "top-right",
+            color: "success",
+            title: "Success",
+            text: data.message
+          });
+          this.$router.push("/");
+        })
+        .catch(e => {
+          this.$vs.notify({
+            position: "top-right",
+            color: "danger",
+            title: "Error",
+            text: e.response.data.message
+          });
+          this.$router.push("/");
+        });
     },
 
     async addPost() {
       await http
-        .post(`/${this.$store.state.userId}/posts`, {
+        .post(`/posts`, {
           title: this.newPostTitle,
           content: this.newPostContent
         })
@@ -128,7 +147,7 @@ export default {
           this.$vs.notify({
             color: "danger",
             title: "Error",
-            text: e.message
+            text: e.response.data.message
           });
         });
     },
@@ -156,7 +175,7 @@ export default {
                 position: "top-right",
                 color: "danger",
                 title: "Error",
-                text: e.message
+                text: e.response.data.message
               });
             });
         }
@@ -187,11 +206,12 @@ export default {
           });
         })
         .catch(e => {
+          this.cancelPost();
           this.$vs.notify({
             position: "top-right",
             color: "danger",
             title: "Error",
-            text: e.message
+            text: e.response.data.message
           });
         });
     },
@@ -205,16 +225,14 @@ export default {
     async loadPosts() {
       this.$vs.loading();
       setTimeout(async () => {
-        const response = await http
-          .get(`/${this.$store.state.userId}/posts`)
-          .catch(e => {
-            this.$vs.notify({
-              color: "danger",
-              title: "Error",
-              text: e.message
-            });
-            this.$vs.loading.close();
+        const response = await http.get(`/posts`).catch(e => {
+          this.$vs.notify({
+            color: "danger",
+            title: "Error",
+            text: e.response.data.message
           });
+          this.$vs.loading.close();
+        });
         this.posts = response.data;
         this.$vs.loading.close();
       }, 1000);

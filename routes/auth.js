@@ -1,6 +1,6 @@
 import route from "express-promise-router";
 import { check } from "express-validator";
-import { register, login } from "./controllers/authController";
+import { register, login, logOut } from "./controllers/authController";
 
 const router = route();
 
@@ -22,5 +22,7 @@ router.post(
   ],
   login
 );
+
+router.post("/logOut", logOut);
 
 export default router;

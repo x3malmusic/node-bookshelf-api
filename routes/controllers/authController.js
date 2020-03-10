@@ -28,8 +28,9 @@ export const register = async (req, res, next) => {
         expiresIn: "1h"
       });
       return res
+        .cookie("token", token, { httpOnly: true })
         .status(201)
-        .json({ message: "User created", token, userId: user.id });
+        .json({ userId: user.id });
     }
 
     if (candidate.attributes.email === email) {
@@ -69,5 +70,17 @@ export const login = async (req, res, next) => {
       expiresIn: "1h"
     });
     res.cookie("token", token, { httpOnly: true }).json({ userId: user.id });
-  } catch (e) {}
+  } catch (e) {
+    next(e);
+  }
+};
+
+export const logOut = async (req, res, next) => {
+  try {
+    res
+      .cookie("token", null, { httpOnly: true })
+      .json({ message: "You've successfully logged out" });
+  } catch (e) {
+    next(e);
+  }
 };

@@ -2,8 +2,8 @@ import { Post } from "../../models/Post";
 
 export const getPosts = async (req, res, next) => {
   try {
-    const posts = await Post.where({ user_id: req.params.userId })
-      .orderBy("id", "ASC")
+    const posts = await Post.where({ user_id: req.user.userId })
+      .orderBy("id", "DESC")
       .fetchAll({
         require: false
       });
@@ -17,7 +17,7 @@ export const addPost = async (req, res, next) => {
   try {
     const { title, content } = req.body;
     if (title && title.length > 3) {
-      await Post.forge({ user_id: req.params.userId, title, content }).save();
+      await Post.forge({ user_id: req.user.userId, title, content }).save();
     } else {
       res
         .status(400)

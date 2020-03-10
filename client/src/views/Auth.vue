@@ -29,11 +29,11 @@ import { mapMutations } from "vuex";
 export default {
   name: "Auth",
   data: () => ({
-    email: "test@email.com",
-    password: "qweasd"
+    email: "",
+    password: ""
   }),
   methods: {
-    ...mapMutations(["setToken", "setUserId"]),
+    ...mapMutations(["setUserId"]),
 
     async register() {
       await http
@@ -56,7 +56,7 @@ export default {
             position: "top-right",
             color: "danger",
             title: "Error",
-            text: e.message
+            text: e.response.data.message
           });
         });
     },
@@ -82,7 +82,7 @@ export default {
             position: "top-right",
             color: "danger",
             title: "Error",
-            text: e.message
+            text: e.response.data.message
           });
         });
     }

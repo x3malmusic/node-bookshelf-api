@@ -5,13 +5,9 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    token: "",
     userId: ""
   },
   mutations: {
-    setToken(state, token) {
-      state.token = token;
-    },
     setUserId(state, id) {
       state.userId = id;
     }
