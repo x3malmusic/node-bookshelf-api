@@ -227,10 +227,6 @@ export default {
     },
 
     async loadPosts() {
-      if (!this.userId) {
-        this.$vs.loading.close();
-        this.$router.push("/");
-      }
       this.$vs.loading();
       setTimeout(async () => {
         await http
@@ -252,7 +248,9 @@ export default {
   },
 
   mounted() {
-    this.loadPosts();
+    if (this.userId) {
+      this.loadPosts();
+    } else this.$router.push("/");
   }
 };
 </script>
