@@ -23,26 +23,26 @@
 </template>
 
 <script>
-import { http } from "../http";
+import http from "../http";
 import { mapMutations } from "vuex";
 
 export default {
   name: "Auth",
   data: () => ({
-    email: "",
-    password: ""
+    email: "test@email.com",
+    password: "qweasd"
   }),
   methods: {
     ...mapMutations(["setToken", "setUserId"]),
 
     async register() {
-      await http("/auth/register", "POST", {
-        email: this.email,
-        password: this.password
-      })
-        .then(res => {
-          this.setToken(res.token);
-          this.setUserId(res.userId);
+      await http
+        .post("/auth/register", {
+          email: this.email,
+          password: this.password
+        })
+        .then(({ data }) => {
+          this.setUserId(data.userId);
           this.$router.push("/posts");
           this.$vs.notify({
             position: "top-right",
@@ -62,13 +62,13 @@ export default {
     },
 
     async login() {
-      await http("/auth/login", "POST", {
-        email: this.email,
-        password: this.password
-      })
-        .then(res => {
-          this.setToken(res.token);
-          this.setUserId(res.userId);
+      await http
+        .post("/auth/login", {
+          email: this.email,
+          password: this.password
+        })
+        .then(({ data }) => {
+          this.setUserId(data.userId);
           this.$router.push("/posts");
           this.$vs.notify({
             position: "top-right",

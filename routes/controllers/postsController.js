@@ -2,9 +2,11 @@ import { Post } from "../../models/Post";
 
 export const getPosts = async (req, res, next) => {
   try {
-    const posts = await Post.where({ user_id: req.params.userId }).fetchAll({
-      require: false
-    });
+    const posts = await Post.where({ user_id: req.params.userId })
+      .orderBy("id", "ASC")
+      .fetchAll({
+        require: false
+      });
     res.json(posts);
   } catch (e) {
     next(e);

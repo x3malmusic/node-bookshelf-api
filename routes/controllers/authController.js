@@ -24,10 +24,9 @@ export const register = async (req, res, next) => {
 
       const user = await User.where({ email }).fetch({ require: false });
 
-      const token = jwt.sign({ userId: user.id }, process.env.jwtSecret, {
+      const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
         expiresIn: "1h"
       });
-
       return res
         .status(201)
         .json({ message: "User created", token, userId: user.id });
@@ -66,10 +65,9 @@ export const login = async (req, res, next) => {
         .json({ message: "Email or password is not valid" });
     }
 
-    const token = jwt.sign({ userId: user.id }, process.env.jwtSecret, {
+    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
       expiresIn: "1h"
     });
-
-    res.json({ token, userId: user.id });
+    res.cookie("token", token, { httpOnly: true }).json({ userId: user.id });
   } catch (e) {}
 };

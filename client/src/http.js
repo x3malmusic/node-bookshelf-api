@@ -1,22 +1,8 @@
-export const http = async (url, method = "GET", body = null, headers = {}) => {
-  try {
-    if (body) {
-      body = JSON.stringify(body);
-      headers["Content-Type"] = "application/json";
-    }
-    const response = await fetch("http://localhost:8000" + url, {
-      method,
-      body,
-      headers
-    });
-    const data = await response.json();
+import axios from "axios";
 
-    if (!response.ok) {
-      throw new Error(data.message || "Something went wrong");
-    }
+const instance = axios.create({
+  baseURL: "http://localhost:8000",
+  withCredentials: true
+});
 
-    return data;
-  } catch (e) {
-    throw e;
-  }
-};
+export default instance;

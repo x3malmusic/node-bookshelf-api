@@ -1,11 +1,16 @@
 <template>
   <div style="padding: 10px">
     <nav class="bg-gray-200 flex justify-between items-center p-4 mb-6 rounded">
-      <h3>Huitter</h3>
+      <h3 class="bg-gray-300 py-2 px-4 rounded">Huitter</h3>
       <vs-button class="large" @click="logOut">Log Out</vs-button>
     </nav>
 
     <vs-row class="justify-center flex-col items-center">
+      <vs-col vs-w="4" class="flex justify-center">
+        <vs-button class="medium px-16 mb-4" @click="addPostPopupActive = true"
+          >Add Post</vs-button
+        >
+      </vs-col>
       <vs-col vs-w="2" v-if="!posts.length">
         <vs-card>
           <div slot="header">
@@ -63,12 +68,6 @@
           >
         </vs-card>
       </vs-col>
-
-      <vs-col vs-w="4" class="flex justify-center">
-        <vs-button class="medium px-16" @click="addPostPopupActive = true"
-          >Add Post</vs-button
-        >
-      </vs-col>
     </vs-row>
 
     <vs-popup
@@ -91,7 +90,7 @@
 </template>
 
 <script>
-import { http } from "../http.js";
+import http from "../http.js";
 
 export default {
   name: "Posts",
@@ -110,16 +109,17 @@ export default {
     },
 
     async addPost() {
-      await http(`/${this.$store.state.userId}/posts`, "POST", {
-        title: this.newPostTitle,
-        content: this.newPostContent
-      })
-        .then(res => {
+      await http
+        .post(`/${this.$store.state.userId}/posts`, {
+          title: this.newPostTitle,
+          content: this.newPostContent
+        })
+        .then(({ data }) => {
           this.$vs.notify({
             position: "top-right",
             color: "success",
             title: "Success",
-            text: res.message
+            text: data.message
           });
           this.addPostPopupActive = false;
           this.loadPosts();
@@ -140,13 +140,14 @@ export default {
         title: `Confirm`,
         text: "Are you sure want to delete this post",
         accept: async () => {
-          await http(`/posts/${id}`, "DELETE")
-            .then(res => {
+          await http
+            .delete(`/posts/${id}`)
+            .then(({ data }) => {
               this.$vs.notify({
                 position: "top-right",
                 color: "success",
                 title: "Success",
-                text: res.message
+                text: data.message
               });
               this.loadPosts();
             })
@@ -170,18 +171,19 @@ export default {
     },
 
     async acceptPost(post) {
-      await http(`/posts/${post.id}`, "PUT", {
-        title: this.$refs[`postTitle${post.id}`][0].value,
-        content: this.$refs[`postContent${post.id}`][0].innerHTML.trim()
-      })
-        .then(res => {
+      await http
+        .put(`/posts/${post.id}`, {
+          title: this.$refs[`postTitle${post.id}`][0].value,
+          content: this.$refs[`postContent${post.id}`][0].innerHTML.trim()
+        })
+        .then(({ data }) => {
           this.postContent = "";
           this.postId = null;
           this.$vs.notify({
             position: "top-right",
             color: "success",
             title: "Success",
-            text: res.message
+            text: data.message
           });
         })
         .catch(e => {
@@ -203,7 +205,17 @@ export default {
     async loadPosts() {
       this.$vs.loading();
       setTimeout(async () => {
-        this.posts = await http(`/${this.$store.state.userId}/posts`, "GET");
+        const response = await http
+          .get(`/${this.$store.state.userId}/posts`)
+          .catch(e => {
+            this.$vs.notify({
+              color: "danger",
+              title: "Error",
+              text: e.message
+            });
+            this.$vs.loading.close();
+          });
+        this.posts = response.data;
         this.$vs.loading.close();
       }, 1000);
     }

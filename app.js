@@ -1,4 +1,6 @@
 import express from "express";
+import cookieParser from "cookie-parser";
+import { verifyToken } from "./middlewares/jwtVerify";
 import posts from "./routes/posts";
 import auth from "./routes/auth";
 import dotenv from "dotenv";
@@ -9,10 +11,16 @@ dotenv.config();
 
 const port = process.env.PORT || 8000;
 
-app.use(cors());
+app.use(
+  cors({
+    origin: ["*", "http://localhost:8080"],
+    credentials: true
+  })
+);
+app.use(cookieParser());
 app.use(express.json({ extended: true }));
-app.use("", posts);
 app.use("/auth", auth);
+app.use("/", verifyToken, posts);
 app.use((err, req, res, next) => {
   // res.status(500).json({ message: err.message });
 });
