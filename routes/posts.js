@@ -7,10 +7,10 @@ import {
 import route from "express-promise-router";
 const router = route();
 
-router.get("/posts", getPosts);
-router.post("/posts", addPost);
-router.put("/posts/:id", updatePost);
-router.patch("/posts/:id", updatePost);
-router.delete("/posts/:id", deletePost);
+router.get("/:userId", getPosts);
+router.post("/:userId", addPost);
+router.put("/:id", updatePost);
+router.patch("/:id", updatePost);
+router.delete("/:id", deletePost);
 
 export default router;

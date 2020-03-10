@@ -86,6 +86,19 @@ export default {
           });
         });
     }
+  },
+  async created() {
+    try {
+      const { data } = await http.get("/users/getUser");
+      if (data && data.userId) {
+        this.setUserId(data.userId);
+        this.$router.push("/posts");
+      } else {
+        this.$router.push("/");
+      }
+    } catch (e) {
+      console.log(e);
+    }
   }
 };
 </script>

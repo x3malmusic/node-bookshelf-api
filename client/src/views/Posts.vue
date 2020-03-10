@@ -91,6 +91,7 @@
 
 <script>
 import http from "../http.js";
+import { mapState } from "vuex";
 
 export default {
   name: "Posts",
@@ -103,6 +104,9 @@ export default {
     newPostTitle: "",
     newPostContent: ""
   }),
+  computed: {
+    ...mapState(["userId"])
+  },
   methods: {
     async logOut() {
       await http
@@ -129,7 +133,7 @@ export default {
 
     async addPost() {
       await http
-        .post(`/posts`, {
+        .post(`/${this.userId}/posts`, {
           title: this.newPostTitle,
           content: this.newPostContent
         })
@@ -223,21 +227,30 @@ export default {
     },
 
     async loadPosts() {
+      if (!this.userId) {
+        this.$vs.loading.close();
+        this.$router.push("/");
+      }
       this.$vs.loading();
       setTimeout(async () => {
-        const response = await http.get(`/posts`).catch(e => {
-          this.$vs.notify({
-            color: "danger",
-            title: "Error",
-            text: e.response.data.message
+        await http
+          .get(`/posts/${this.userId}`)
+          .then(({ data }) => {
+            this.posts = data;
+            this.$vs.loading.close();
+          })
+          .catch(e => {
+            this.$vs.notify({
+              color: "danger",
+              title: "Error",
+              text: e.response.data.message
+            });
+            this.$vs.loading.close();
           });
-          this.$vs.loading.close();
-        });
-        this.posts = response.data;
-        this.$vs.loading.close();
       }, 1000);
     }
   },
+
   mounted() {
     this.loadPosts();
   }

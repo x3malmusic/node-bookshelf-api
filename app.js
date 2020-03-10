@@ -3,6 +3,7 @@ import cookieParser from "cookie-parser";
 import { verifyToken } from "./middlewares/jwtVerify";
 import posts from "./routes/posts";
 import auth from "./routes/auth";
+import user from "./routes/user";
 import dotenv from "dotenv";
 import cors from "cors";
 
@@ -20,7 +21,8 @@ app.use(
 app.use(cookieParser());
 app.use(express.json({ extended: true }));
 app.use("/auth", auth);
-app.use("/", verifyToken, posts);
+app.use("/posts", verifyToken, posts);
+app.use("/users", verifyToken, user);
 app.use((err, req, res, next) => {
   // res.status(500).json({ message: err.message });
 });
