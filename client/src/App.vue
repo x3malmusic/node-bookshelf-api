@@ -14,14 +14,14 @@ export default {
     ...mapMutations(["setUserId"])
   },
   async created() {
-    try {
-      const { data } = await http.get("/users/getUser");
-      if (data && data.userId) {
-        this.setUserId(data.userId);
-      }
-    } catch (e) {
-      console.log(e);
-    }
+    await http
+      .get("/users/getUser")
+      .then(res => {
+        if (res.data.loggedIn) this.setUserId(res.data.userId);
+      })
+      .catch(e => {
+        console.log(e);
+      });
   }
 };
 </script>
