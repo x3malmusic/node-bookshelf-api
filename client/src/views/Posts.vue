@@ -103,7 +103,7 @@ export default {
   methods: {
     async addPost() {
       await http
-        .post(`/${this.userId}/posts`, {
+        .post(`/posts/${this.userId}`, {
           title: this.newPostTitle,
           content: this.newPostContent
         })
