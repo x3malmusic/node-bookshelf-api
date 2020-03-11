@@ -1,74 +1,67 @@
 <template>
-  <div style="padding: 10px">
-    <nav class="bg-gray-200 flex justify-between items-center p-4 mb-6 rounded">
-      <h3 class="bg-gray-300 py-2 px-4 rounded">Huitter</h3>
-      <vs-button class="large" @click="logOut">Log Out</vs-button>
-    </nav>
+  <vs-row class="justify-center flex-col items-center">
+    <vs-col vs-w="4" class="flex justify-center">
+      <vs-button class="medium px-16 mb-4" @click="addPostPopupActive = true"
+        >Add Post</vs-button
+      >
+    </vs-col>
+    <vs-col vs-w="2" v-if="!posts.length">
+      <vs-card>
+        <div slot="header">
+          <h3>
+            No posts!
+          </h3>
+        </div>
+      </vs-card>
+    </vs-col>
 
-    <vs-row class="justify-center flex-col items-center">
-      <vs-col vs-w="4" class="flex justify-center">
-        <vs-button class="medium px-16 mb-4" @click="addPostPopupActive = true"
-          >Add Post</vs-button
+    <vs-col vs-w="4" v-else-if="posts && posts.length">
+      <vs-card v-for="post in posts" :key="post.id">
+        <div slot="header" class="flex justify-between">
+          <input
+            type="text"
+            class="font-bold w-full"
+            :ref="`postTitle${post.id}`"
+            :disabled="postId !== post.id"
+            :class="postId === post.id ? 'bg-gray-200' : 'bg-transparent'"
+            :value="post.title"
+          />
+          <vs-button @click="deletePost(post.id)" color="danger" class="small"
+            >X</vs-button
+          >
+        </div>
+        <div
+          :ref="`postContent${post.id}`"
+          :contenteditable="postId === post.id"
+          v-html="post.content"
+          :class="
+            postId === post.id
+              ? 'bg-gray-200 border border-solid border-blue-500 rounded'
+              : null
+          "
         >
-      </vs-col>
-      <vs-col vs-w="2" v-if="!posts.length">
-        <vs-card>
-          <div slot="header">
-            <h3>
-              No posts!
-            </h3>
-          </div>
-        </vs-card>
-      </vs-col>
-
-      <vs-col vs-w="4" v-if="posts && posts.length">
-        <vs-card v-for="post in posts" :key="post.id">
-          <div slot="header" class="flex justify-between">
-            <input
-              type="text"
-              class="font-bold w-full"
-              :ref="`postTitle${post.id}`"
-              :disabled="postId !== post.id"
-              :class="postId === post.id ? 'bg-gray-200' : 'bg-transparent'"
-              :value="post.title"
-            />
-            <vs-button @click="deletePost(post.id)" color="danger" class="small"
-              >X</vs-button
-            >
-          </div>
-          <div
-            :ref="`postContent${post.id}`"
-            :contenteditable="postId === post.id"
-            v-html="post.content"
-            :class="
-              postId === post.id
-                ? 'bg-gray-200 border border-solid border-blue-500 rounded'
-                : null
-            "
-          >
-            <!--            {{ post.content }}-->
-          </div>
-          <vs-button
-            @click="acceptPost(post)"
-            class="medium px-8 mt-4 mr-2"
-            v-if="postId === post.id"
-            >Accept</vs-button
-          >
-          <vs-button
-            @click="cancelPost(post)"
-            class="medium px-8 mt-4"
-            v-if="postId === post.id"
-            >Cancel</vs-button
-          >
-          <vs-button
-            @click="editPost(post)"
-            class="medium px-8 mt-4"
-            v-if="!(postId === post.id)"
-            >Edit</vs-button
-          >
-        </vs-card>
-      </vs-col>
-    </vs-row>
+          <!--            {{ post.content }}-->
+        </div>
+        <vs-button
+          @click="acceptPost(post)"
+          class="medium px-8 mt-4 mr-2"
+          v-if="postId === post.id"
+          >Accept</vs-button
+        >
+        <vs-button
+          @click="cancelPost(post)"
+          class="medium px-8 mt-4"
+          v-if="postId === post.id"
+          >Cancel</vs-button
+        >
+        <vs-button
+          @click="editPost(post)"
+          class="medium px-8 mt-4"
+          v-if="!(postId === post.id)"
+          >Edit</vs-button
+        >
+      </vs-card>
+    </vs-col>
 
     <vs-popup
       class="holamundo"
@@ -86,7 +79,7 @@
         >Cancel</vs-button
       >
     </vs-popup>
-  </div>
+  </vs-row>
 </template>
 
 <script>
@@ -108,29 +101,6 @@ export default {
     ...mapState(["userId"])
   },
   methods: {
-    async logOut() {
-      await http
-        .post("/auth/logout")
-        .then(({ data }) => {
-          this.$vs.notify({
-            position: "top-right",
-            color: "success",
-            title: "Success",
-            text: data.message
-          });
-          this.$router.push("/");
-        })
-        .catch(e => {
-          this.$vs.notify({
-            position: "top-right",
-            color: "danger",
-            title: "Error",
-            text: e.response.data.message
-          });
-          this.$router.push("/");
-        });
-    },
-
     async addPost() {
       await http
         .post(`/${this.userId}/posts`, {
@@ -250,7 +220,7 @@ export default {
   mounted() {
     if (this.userId) {
       this.loadPosts();
-    } else this.$router.push("/");
+    } else this.$router.push({ name: "auth" });
   }
 };
 </script>

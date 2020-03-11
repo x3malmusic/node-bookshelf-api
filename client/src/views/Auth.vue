@@ -43,7 +43,7 @@ export default {
         })
         .then(({ data }) => {
           this.setUserId(data.userId);
-          this.$router.push("/posts");
+          this.$router.push({ name: "posts" });
           this.$vs.notify({
             position: "top-right",
             color: "success",
@@ -69,7 +69,7 @@ export default {
         })
         .then(({ data }) => {
           this.setUserId(data.userId);
-          this.$router.push("/posts");
+          this.$router.push({ name: "posts" });
           this.$vs.notify({
             position: "top-right",
             color: "success",
@@ -87,14 +87,15 @@ export default {
         });
     }
   },
+
   async created() {
     try {
       const { data } = await http.get("/users/getUser");
       if (data && data.userId) {
         this.setUserId(data.userId);
-        this.$router.push("/posts");
+        this.$router.push({ name: "posts" });
       } else {
-        this.$router.push("/");
+        this.$router.push({ name: "auth" });
       }
     } catch (e) {
       console.log(e);
