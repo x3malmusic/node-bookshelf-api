@@ -218,9 +218,7 @@ export default {
   },
 
   mounted() {
-    if (this.userId) {
-      this.loadPosts();
-    } else this.$router.push({ name: "auth" });
+    this.loadPosts();
   }
 };
 </script>

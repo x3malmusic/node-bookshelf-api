@@ -4,13 +4,13 @@ export const verifyToken = async (req, res, next) => {
   const token = req.cookies.token || "";
   try {
     if (!token) {
-      return res.status(401).json("You need to Login");
+      return res.status(401).json({ loggedIn: false });
     }
     await jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
       if (err) {
         return res.status(403);
       }
-      req.user = user;
+      req.user = { userId: user.userId, loggedIn: true };
       next();
     });
   } catch (err) {

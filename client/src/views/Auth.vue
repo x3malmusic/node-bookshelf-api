@@ -88,19 +88,7 @@ export default {
     }
   },
 
-  async created() {
-    try {
-      const { data } = await http.get("/users/getUser");
-      if (data && data.userId) {
-        this.setUserId(data.userId);
-        this.$router.push({ name: "posts" });
-      } else {
-        this.$router.push({ name: "auth" });
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  }
+
 };
 </script>
 
