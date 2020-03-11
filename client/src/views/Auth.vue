@@ -86,9 +86,7 @@ export default {
           });
         });
     }
-  },
-
-
+  }
 };
 </script>
 
@@ -100,7 +98,7 @@ export default {
   margin-right: 10px;
 }
 .card {
-  margin: auto;
+  margin: 100px auto 0 auto;
   width: 400px;
 }
 </style>
