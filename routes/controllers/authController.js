@@ -8,8 +8,7 @@ export const register = async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
-        errors: errors.array(),
-        message: "Email is not valid or password is too short"
+        message: errors.array()[0].msg
       });
     }
     const { email, password } = req.body;
@@ -44,8 +43,7 @@ export const login = async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
-        errors: errors.array(),
-        message: "Email or password is not valid"
+        message: errors.array()[0].msg
       });
     }
 
@@ -61,9 +59,7 @@ export const login = async (req, res, next) => {
     const isMatch = await bcrypt.compare(password, user.attributes.password);
 
     if (!isMatch) {
-      return res
-        .status(400)
-        .json({ message: "Email or password is not valid" });
+      return res.status(400).json({ message: "Email or password is wrong" });
     }
 
     const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {

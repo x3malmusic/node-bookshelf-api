@@ -18,7 +18,7 @@ router.post(
   "/login",
   [
     check("email", "Email is not valid").isEmail(),
-    check("password", "Enter password").exists()
+    check("password", "Enter password").exists({ checkFalsy: true })
   ],
   login
 );
