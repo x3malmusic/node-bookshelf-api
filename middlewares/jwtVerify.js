@@ -10,7 +10,7 @@ export const verifyToken = async (req, res, next) => {
       if (err) {
         return res.status(403);
       }
-      req.user = { userId: user.userId, loggedIn: true };
+      req.user = { userId: user.userId, email: user.email, loggedIn: true };
       next();
     });
   } catch (err) {

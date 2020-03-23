@@ -33,7 +33,7 @@ export default {
     password: ""
   }),
   methods: {
-    ...mapMutations(["setUserId"]),
+    ...mapMutations(["setUserData"]),
 
     async register() {
       await http
@@ -42,7 +42,7 @@ export default {
           password: this.password
         })
         .then(({ data }) => {
-          this.setUserId(data.userId);
+          this.setUserData(data);
           this.$router.push({ name: "posts" });
           this.$vs.notify({
             position: "top-right",
@@ -68,7 +68,7 @@ export default {
           password: this.password
         })
         .then(({ data }) => {
-          this.setUserId(data.userId);
+          this.setUserData(data);
           this.$router.push({ name: "posts" });
           this.$vs.notify({
             position: "top-right",

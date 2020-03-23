@@ -23,13 +23,17 @@ export const register = async (req, res, next) => {
 
       const user = await User.where({ email }).fetch({ require: false });
 
-      const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-        expiresIn: "1h"
-      });
+      const token = jwt.sign(
+        { userId: user.id, email },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: "1h"
+        }
+      );
       return res
         .cookie("token", token, { httpOnly: true })
         .status(201)
-        .json({ userId: user.id });
+        .json({ userId: user.id, email: user.email });
     }
 
     if (candidate.attributes.email === email) {
@@ -62,10 +66,16 @@ export const login = async (req, res, next) => {
       return res.status(400).json({ message: "Email or password is wrong" });
     }
 
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-      expiresIn: "1h"
-    });
-    res.cookie("token", token, { httpOnly: true }).json({ userId: user.id });
+    const token = jwt.sign(
+      { userId: user.id, email: user.attributes.email },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1h"
+      }
+    );
+    res
+      .cookie("token", token, { httpOnly: true })
+      .json({ userId: user.id, email: user.attributes.email });
   } catch (e) {
     next(e);
   }
