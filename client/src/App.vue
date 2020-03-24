@@ -11,17 +11,17 @@ import { mapMutations } from "vuex";
 export default {
   name: "App",
   methods: {
-    ...mapMutations(["setUserData"])
+    ...mapMutations(["setUserData"]),
   },
   async created() {
     await http
       .get("/users/getUser")
-      .then(res => {
-        if (res.data.loggedIn) this.setUserData(res.data);
+      .then((res) => {
+        if (res && res.data.loggedIn) this.setUserData(res.data);
       })
-      .catch(e => {
+      .catch((e) => {
         console.log(e);
       });
-  }
+  },
 };
 </script>

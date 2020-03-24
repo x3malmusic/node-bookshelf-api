@@ -1,5 +1,5 @@
 <template>
-  <vs-card class="card ">
+  <vs-card class="card">
     <div slot="header">
       <h3>Authorization</h3>
     </div>
@@ -30,7 +30,7 @@ export default {
   name: "Auth",
   data: () => ({
     email: "",
-    password: ""
+    password: "",
   }),
   methods: {
     ...mapMutations(["setUserData"]),
@@ -39,24 +39,26 @@ export default {
       await http
         .post("/auth/register", {
           email: this.email,
-          password: this.password
+          password: this.password,
         })
-        .then(({ data }) => {
-          this.setUserData(data);
-          this.$router.push({ name: "posts" });
-          this.$vs.notify({
-            position: "top-right",
-            color: "success",
-            title: "Logged In",
-            text: "Welcome user"
-          });
+        .then((res) => {
+          if (res && res.data) {
+            this.setUserData(data);
+            this.$router.push({ name: "posts" });
+            this.$vs.notify({
+              position: "top-right",
+              color: "success",
+              title: "Logged In",
+              text: "Welcome user",
+            });
+          }
         })
-        .catch(e => {
+        .catch((e) => {
           this.$vs.notify({
             position: "top-right",
             color: "danger",
             title: "Error",
-            text: e.response.data.message
+            text: e.response.data.message,
           });
         });
     },
@@ -65,28 +67,30 @@ export default {
       await http
         .post("/auth/login", {
           email: this.email,
-          password: this.password
+          password: this.password,
         })
-        .then(({ data }) => {
-          this.setUserData(data);
-          this.$router.push({ name: "posts" });
-          this.$vs.notify({
-            position: "top-right",
-            color: "success",
-            title: "Logged In",
-            text: "Welcome user"
-          });
+        .then((res) => {
+          if (res && res.data) {
+            this.setUserData(data);
+            this.$router.push({ name: "posts" });
+            this.$vs.notify({
+              position: "top-right",
+              color: "success",
+              title: "Logged In",
+              text: "Welcome user",
+            });
+          }
         })
-        .catch(e => {
+        .catch((e) => {
           this.$vs.notify({
             position: "top-right",
             color: "danger",
             title: "Error",
-            text: e.response.data.message
+            text: e.response.data.message,
           });
         });
-    }
-  }
+    },
+  },
 };
 </script>
 
