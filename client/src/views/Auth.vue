@@ -43,7 +43,7 @@ export default {
         })
         .then((res) => {
           if (res && res.data) {
-            this.setUserData(data);
+            this.setUserData(res.data);
             this.$router.push({ name: "posts" });
             this.$vs.notify({
               position: "top-right",
@@ -71,7 +71,7 @@ export default {
         })
         .then((res) => {
           if (res && res.data) {
-            this.setUserData(data);
+            this.setUserData(res.data);
             this.$router.push({ name: "posts" });
             this.$vs.notify({
               position: "top-right",
