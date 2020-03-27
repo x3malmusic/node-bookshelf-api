@@ -1,0 +1,10 @@
+PORT =
+
+// jwt token
+JWT_SECRET =
+
+//knexfile.js settings
+DB_USER = "postgres" by default
+DB_USER_PASSWORD = "user_password"
+DB_NAME = "postgres" by default
+DB_HOST = "127.0.0.1" by default
