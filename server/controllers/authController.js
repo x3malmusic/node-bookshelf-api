@@ -1,21 +1,21 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { validationResult } from "express-validator";
-import { User } from "../../models/User";
+import { User } from "../models/User";
 
 export const register = async (req, res, next) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
-        message: errors.array()[0].msg
+        message: errors.array()[0].msg,
       });
     }
     const { email, password } = req.body;
 
     const candidate = await User.where({ email })
       .fetch({ require: false })
-      .catch(e => next(e));
+      .catch((e) => next(e));
 
     if (!candidate) {
       const hashedPassword = await bcrypt.hash(password, 12);
@@ -27,7 +27,7 @@ export const register = async (req, res, next) => {
         { userId: user.id, email },
         process.env.JWT_SECRET,
         {
-          expiresIn: "1h"
+          expiresIn: "1h",
         }
       );
       return res
@@ -47,14 +47,14 @@ export const login = async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
-        message: errors.array()[0].msg
+        message: errors.array()[0].msg,
       });
     }
 
     const { email, password } = req.body;
     const user = await User.where({ email })
       .fetch({ require: false })
-      .catch(e => next(e));
+      .catch((e) => next(e));
 
     if (!user) {
       return res.status(400).json({ message: "User not found" });
@@ -70,7 +70,7 @@ export const login = async (req, res, next) => {
       { userId: user.id, email: user.attributes.email },
       process.env.JWT_SECRET,
       {
-        expiresIn: "1h"
+        expiresIn: "1h",
       }
     );
     res

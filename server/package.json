@@ -6,7 +6,8 @@
   "scripts": {
     "server": "nodemon -r esm app.js",
     "client": "npm run serve --prefix \"../client\"",
-    "migrate":  "knex migrate:latest",
+    "migrate": "knex migrate:latest",
+    "seeds": "knex seed:run",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "Jack",

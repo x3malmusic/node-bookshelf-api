@@ -3,7 +3,7 @@ import {
   addPost,
   updatePost,
   deletePost
-} from "./controllers/postsController";
+} from "../controllers/postsController";
 import route from "express-promise-router";
 const router = route();
 

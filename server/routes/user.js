@@ -1,4 +1,4 @@
-import { getUser } from "./controllers/userController";
+import { getUser } from "../controllers/userController";
 import route from "express-promise-router";
 const router = route();
 

@@ -1,6 +1,9 @@
 // user: "developer",
 // password: "new_password",
 
+const dotenv = require("dotenv");
+dotenv.config();
+
 module.exports = {
   client: "pg",
   connection: {
@@ -11,6 +14,9 @@ module.exports = {
     charset: "utf8",
   },
   migrations: {
-    directory: "./migrations",
+    directory: "./db/migrations",
+  },
+  seeds: {
+    directory: "./db/seeds",
   },
 };

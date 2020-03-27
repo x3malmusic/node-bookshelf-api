@@ -1,11 +1,11 @@
-import { Post } from "../../models/Post";
+import { Post } from "../models/Post";
 
 export const getPosts = async (req, res, next) => {
   try {
     const posts = await Post.where({ user_id: req.params.userId })
       .orderBy("id", "DESC")
       .fetchAll({
-        require: false
+        require: false,
       });
     res.json(posts);
   } catch (e) {
@@ -38,7 +38,7 @@ export const updatePost = async (req, res, next) => {
           {
             title,
             content,
-            updated_at: new Date(new Date().getTime())
+            updated_at: new Date(new Date().getTime()),
           },
           { patch: true }
         );

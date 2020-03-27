@@ -13,5 +13,5 @@ exports.up = knex => {
 };
 
 exports.down = knex => {
-  return knex.schema.dropTable("posts");
+  return knex.schema.dropTable("users");
 };

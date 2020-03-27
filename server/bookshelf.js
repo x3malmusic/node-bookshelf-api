@@ -1,5 +1,5 @@
-import knex from "knex"
-import bookshelf from "bookshelf"
-const knexConfig = require("./knexfile")
+import knex from "knex";
+import bookshelf from "bookshelf";
+import knexConfig from "./knexfile.js";
 
-export default bookshelf(knex(knexConfig))
+export default bookshelf(knex(knexConfig));
