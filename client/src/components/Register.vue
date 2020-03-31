@@ -66,3 +66,11 @@ export default {
 };
 </script>
 
+<style scoped>
+.mb {
+  margin-bottom: 10px;
+}
+.mr {
+  margin-right: 10px;
+}
+</style>

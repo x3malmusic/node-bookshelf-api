@@ -1,67 +1,17 @@
 <template>
-  <router-view></router-view>
+  <div class="auth">
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
-import http from "../http";
-import { mapMutations } from "vuex";
-
 export default {
   name: "Auth",
-  data: () => ({
-    email: "",
-    password: "",
-  }),
-  methods: {
-    ...mapMutations(["setUserData"]),
-
-    async register() {
-      await http
-        .post("/auth/register", {
-          email: this.email,
-          password: this.password,
-        })
-        .then((res) => {
-          if (res && res.data) {
-            this.setUserData(res.data);
-            this.$router.push({ name: "posts" });
-            this.$_notify_success("Logged In", "Welcome user");
-          }
-        })
-        .catch((e) => {
-          this.$_notify_error("Error", e.response.data.message);
-        });
-    },
-
-    async login() {
-      await http
-        .post("/auth/login", {
-          email: this.email,
-          password: this.password,
-        })
-        .then((res) => {
-          if (res && res.data) {
-            this.setUserData(res.data);
-            this.$router.push({ name: "posts" });
-            this.$_notify_success("Logged In", "Welcome user");
-          }
-        })
-        .catch((e) => {
-          this.$_notify_error("Error", e.response.data.message);
-        });
-    },
-  },
 };
 </script>
 
 <style>
-.mb {
-  margin-bottom: 10px;
-}
-.mr {
-  margin-right: 10px;
-}
-.card {
+.auth {
   margin: 100px auto 0 auto;
   width: 400px;
 }
