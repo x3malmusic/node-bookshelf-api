@@ -45,21 +45,11 @@ export default {
           if (res && res.data) {
             this.setUserData(res.data);
             this.$router.push({ name: "posts" });
-            this.$vs.notify({
-              position: "top-right",
-              color: "success",
-              title: "Logged In",
-              text: "Welcome user",
-            });
+            this.$_notify_success("Logged In", "Welcome user");
           }
         })
         .catch((e) => {
-          this.$vs.notify({
-            position: "top-right",
-            color: "danger",
-            title: "Error",
-            text: e.response.data.message,
-          });
+          this.$_notify_error("Error", e.response.data.message);
         });
     },
 
@@ -73,21 +63,11 @@ export default {
           if (res && res.data) {
             this.setUserData(res.data);
             this.$router.push({ name: "posts" });
-            this.$vs.notify({
-              position: "top-right",
-              color: "success",
-              title: "Logged In",
-              text: "Welcome user",
-            });
+            this.$_notify_success("Logged In", "Welcome user");
           }
         })
         .catch((e) => {
-          this.$vs.notify({
-            position: "top-right",
-            color: "danger",
-            title: "Error",
-            text: e.response.data.message,
-          });
+          this.$_notify_error("Error", e.response.data.message);
         });
     },
   },

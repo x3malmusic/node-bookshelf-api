@@ -70,21 +70,11 @@ export default {
           await http
             .delete(`/posts/${id}`)
             .then(({ data }) => {
-              this.$vs.notify({
-                position: "top-right",
-                color: "success",
-                title: "Success",
-                text: data.message,
-              });
+              this.$_notify_success("Success", data.message);
               this.loadPosts();
             })
             .catch((e) => {
-              this.$vs.notify({
-                position: "top-right",
-                color: "danger",
-                title: "Error",
-                text: e.response.data.message,
-              });
+              this.$_notify_error("Error", e.response.data.message);
             });
         },
       });
@@ -106,21 +96,11 @@ export default {
         .then(({ data }) => {
           this.postContent = "";
           this.postId = null;
-          this.$vs.notify({
-            position: "top-right",
-            color: "success",
-            title: "Success",
-            text: data.message,
-          });
+          this.$_notify_success("Success", data.message);
         })
         .catch((e) => {
           this.cancelPost(post);
-          this.$vs.notify({
-            position: "top-right",
-            color: "danger",
-            title: "Error",
-            text: e.response.data.message,
-          });
+          this.$_notify_error("Error", e.response.data.message);
         });
     },
 

@@ -41,21 +41,12 @@ export default {
           content: this.newPostContent,
         })
         .then(({ data }) => {
-          this.$vs.notify({
-            position: "top-right",
-            color: "success",
-            title: "Success",
-            text: data.message,
-          });
+          this.$_notify_success("Success", data.message);
           this.addPostPopupActive = false;
           this.loadPosts();
         })
         .catch((e) => {
-          this.$vs.notify({
-            color: "danger",
-            title: "Error",
-            text: e.response.data.message,
-          });
+          this.$_notify_error("Error", e.response.data.message);
         });
     },
   },

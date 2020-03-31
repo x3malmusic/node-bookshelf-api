@@ -47,11 +47,7 @@ export default {
           this.posts = data;
         })
         .catch((e) => {
-          this.$vs.notify({
-            color: "danger",
-            title: "Error",
-            text: e.response.data.message,
-          });
+          this.$_notify_error("Error", e.response.data.message);
         })
         .finally(() => {
           this.$vs.loading.close();
