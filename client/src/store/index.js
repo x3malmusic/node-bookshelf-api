@@ -20,6 +20,12 @@ export default new Vuex.Store({
     setPosts(state, posts) {
       state.posts = posts;
     },
+
+    clearStore(state) {
+      state.userId = "";
+      state.email = "";
+      state.posts = "";
+    },
   },
 
   actions: {
@@ -40,11 +46,12 @@ export default new Vuex.Store({
       });
     },
 
-    async logOut() {
+    async logOut({ commit }) {
       await http.post("/auth/logout");
+      commit("clearStore");
     },
 
-    async login({ commit }, email, password) {
+    async login({ commit }, { email, password }) {
       await http
         .post("/auth/login", {
           email,
@@ -54,6 +61,22 @@ export default new Vuex.Store({
           if (res && res.data) {
             commit("setUserData", res.data);
           }
+        });
+    },
+
+    async register({ commit }, { email, password }) {
+      await http
+        .post("/auth/register", {
+          email,
+          password,
+        })
+        .then((res) => {
+          if (res && res.data) {
+            commit("setUserData", res.data);
+          }
+        })
+        .catch((e) => {
+          console.log(e);
         });
     },
   },

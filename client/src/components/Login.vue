@@ -34,7 +34,7 @@ export default {
 
     async logIn() {
       try {
-        await this.login(this.email, this.password);
+        await this.login({ email: this.email, password: this.password });
         this.$router.push({ name: "posts" });
         this.$_notify_success("Logged In", "Welcome user");
       } catch (e) {
