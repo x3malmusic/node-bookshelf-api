@@ -26,7 +26,7 @@
       <!--            {{ post.content }}-->
     </div>
     <vs-button
-      @click="acceptPost(post)"
+      @click="changePost(post)"
       class="medium px-8 mt-4 mr-2"
       v-if="postId === post.id"
       >Accept</vs-button
@@ -47,7 +47,6 @@
 </template>
 
 <script>
-import http from "../http";
 import { mapActions } from "vuex";
 
 export default {
@@ -61,7 +60,7 @@ export default {
     postContent: "",
   }),
   methods: {
-    ...mapActions(["deletePost"]),
+    ...mapActions(["deletePost", "acceptPost"]),
     deleteUserPost(id) {
       this.$vs.dialog({
         type: "confirm",
@@ -86,25 +85,26 @@ export default {
       post.editable = true;
     },
 
-    async acceptPost(post) {
-      await http
-        .put(`/posts/${post.id}`, {
+    async changePost(post) {
+      try {
+        await this.acceptPost({
+          post,
           title: this.$refs[`postTitle${post.id}`].value,
           content: this.$refs[`postContent${post.id}`].innerHTML.trim(),
-        })
-        .then(({ data }) => {
-          this.postContent = "";
-          this.postId = null;
-          this.$_notify_success("Success", data.message);
-        })
-        .catch((e) => {
-          this.cancelPost(post);
-          this.$_notify_error("Error", e.response.data.message);
         });
+        this.postContent = "";
+        this.postTitle = "";
+        this.postId = null;
+        this.$_notify_success("Success", "Post updated");
+      } catch (e) {
+        this.cancelPost(post);
+        this.$_notify_error("Error", e);
+      }
     },
 
     cancelPost(post) {
       this.$refs[`postContent${post.id}`].innerHTML = this.postContent;
+      // this.$refs[`postTitle${post.id}`].value = this.postTitle;
       this.postContent = "";
       this.postTitle = "";
       this.postId = null;
