@@ -41,7 +41,20 @@ export default new Vuex.Store({
     },
 
     async logOut() {
-      await http.post("/auth/logout")
+      await http.post("/auth/logout");
+    },
+
+    async login({ commit }, email, password) {
+      await http
+        .post("/auth/login", {
+          email,
+          password,
+        })
+        .then((res) => {
+          if (res && res.data) {
+            commit("setUserData", res.data);
+          }
+        });
     },
   },
   modules: {},

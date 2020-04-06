@@ -15,14 +15,13 @@
       placeholder="Password"
       v-model="password"
     />
-    <vs-button color="primary" class="mr" @click="login">Sign In</vs-button>
+    <vs-button color="primary" class="mr" @click="logIn">Sign In</vs-button>
     <router-link to="/">Register</router-link>
   </vs-card>
 </template>
 
 <script>
-import http from "../http";
-import { mapMutations } from "vuex";
+import { mapActions } from "vuex";
 
 export default {
   name: "Login",
@@ -31,24 +30,16 @@ export default {
     password: "qweasd",
   }),
   methods: {
-    ...mapMutations(["setUserData"]),
+    ...mapActions(["login"]),
 
-    async login() {
-      await http
-        .post("/auth/login", {
-          email: this.email,
-          password: this.password,
-        })
-        .then((res) => {
-          if (res && res.data) {
-            this.setUserData(res.data);
-            this.$router.push({ name: "posts" });
-            this.$_notify_success("Logged In", "Welcome user");
-          }
-        })
-        .catch((e) => {
-          this.$_notify_error("Error", e.response.data.message);
-        });
+    async logIn() {
+      try {
+        await this.login(this.email, this.password);
+        this.$router.push({ name: "posts" });
+        this.$_notify_success("Logged In", "Welcome user");
+      } catch (e) {
+        this.$_notify_error("Error", "Something went wrong");
+      }
     },
   },
 };
