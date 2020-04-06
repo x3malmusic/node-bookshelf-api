@@ -30,14 +30,9 @@ export default new Vuex.Store({
 
   actions: {
     async getUserData({ commit }) {
-      await http
-        .get("/users/getUser")
-        .then((res) => {
-          if (res && res.data.loggedIn) commit("setUserData", res.data);
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+      await http.get("/users/getUser").then((res) => {
+        if (res && res.data.loggedIn) commit("setUserData", res.data);
+      });
     },
 
     async loadPosts({ commit }) {
