@@ -31,11 +31,11 @@ export default {
         .post("/auth/logout")
         .then(({ data }) => {
           this.$_notify_success("Success", data.message);
-          this.$router.push({ name: "auth" });
+          this.$router.push("/");
         })
         .catch((e) => {
           this.$_notify_error("Error", e.response.data.message);
-          this.$router.push({ name: "auth" });
+          this.$router.push("/");
         });
     },
   },

@@ -18,8 +18,7 @@
 </template>
 
 <script>
-import http from "../http.js";
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 import AddPost from "../components/AddPost";
 import Post from "../components/Post";
 
@@ -30,33 +29,26 @@ export default {
   },
   name: "Posts",
   data: () => ({
-    posts: [],
     postId: null,
     postTitle: "",
     postContent: "",
   }),
   computed: {
-    ...mapState(["userId"]),
+    ...mapState(["userId", "posts"]),
   },
   methods: {
-    async loadPosts() {
-      this.$vs.loading();
-      await http
-        .get(`/posts/${this.userId}`)
-        .then(({ data }) => {
-          this.posts = data;
-        })
-        .catch((e) => {
-          this.$_notify_error("Error", e.response.data.message);
-        })
-        .finally(() => {
-          this.$vs.loading.close();
-        });
-    },
+    ...mapActions(["loadPosts"]),
   },
 
-  mounted() {
-    this.loadPosts();
+  async mounted() {
+    try {
+      this.$vs.loading();
+      await this.$store.dispatch("loadPosts");
+    } catch (e) {
+      this.$_notify_error("Error", e.response.data.message);
+    } finally {
+      this.$vs.loading.close();
+    }
   },
 };
 </script>

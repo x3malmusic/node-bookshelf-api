@@ -8,6 +8,7 @@ export default new Vuex.Store({
   state: {
     userId: "",
     email: "",
+    posts: [],
   },
 
   mutations: {
@@ -15,18 +16,28 @@ export default new Vuex.Store({
       state.userId = data.userId;
       state.email = data.email;
     },
+
+    setPosts(state, posts) {
+      state.posts = posts;
+    },
   },
 
   actions: {
-    getUserData({ commit }) {
-      http
+    async getUserData({ commit }) {
+      await http
         .get("/users/getUser")
         .then((res) => {
-          if (res && res.data.loggedIn) commit(setUserData(res.data));
+          if (res && res.data.loggedIn) commit("setUserData", res.data);
         })
         .catch((e) => {
           console.log(e);
         });
+    },
+
+    async loadPosts({ commit }) {
+      await http.get(`/posts/${this.state.userId}`).then(({ data }) => {
+        commit("setPosts", data);
+      });
     },
   },
   modules: {},

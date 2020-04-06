@@ -7,20 +7,16 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    name: "auth",
-    meta: { reqAuth: false },
     component: () => import("../views/Auth.vue"),
     children: [
       {
         path: "/",
         name: "register",
-        meta: { reqAuth: false },
         component: () => import("../components/Register.vue"),
       },
       {
         path: "/login",
         name: "login",
-        meta: { reqAuth: false },
         component: () => import("../components/Login.vue"),
       },
     ],
@@ -28,13 +24,11 @@ const routes = [
   {
     path: "/user",
     name: "layout",
-    meta: { reqAuth: true },
     component: () => import("../views/Header.vue"),
     children: [
       {
         path: "/posts",
         name: "posts",
-        meta: { reqAuth: true },
         component: () => import("../views/Posts.vue"),
       },
     ],

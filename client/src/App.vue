@@ -13,7 +13,11 @@ export default {
     ...mapActions(["getUserData"]),
   },
   created() {
-    this.getUserData();
+    try {
+      this.getUserData();
+    } catch (e) {
+      console.log(e);
+    }
   },
 };
 </script>

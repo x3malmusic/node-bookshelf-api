@@ -27,8 +27,8 @@ import { mapMutations } from "vuex";
 export default {
   name: "Login",
   data: () => ({
-    email: "",
-    password: "",
+    email: "test@email.com",
+    password: "qweasd",
   }),
   methods: {
     ...mapMutations(["setUserData"]),
@@ -55,10 +55,10 @@ export default {
 </script>
 
 <style scoped>
-  .mb {
-    margin-bottom: 10px;
-  }
-  .mr {
-    margin-right: 10px;
-  }
+.mb {
+  margin-bottom: 10px;
+}
+.mr {
+  margin-right: 10px;
+}
 </style>
