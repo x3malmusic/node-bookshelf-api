@@ -38,7 +38,7 @@ export default {
         this.$router.push({ name: "posts" });
         this.$_notify_success("Logged In", "Welcome user");
       } catch (e) {
-        this.$_notify_error("Error", "Something went wrong");
+        this.$_notify_error("Error", e.response.data.message);
       }
     },
   },

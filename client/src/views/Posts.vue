@@ -28,13 +28,8 @@ export default {
     Post,
   },
   name: "Posts",
-  data: () => ({
-    postId: null,
-    postTitle: "",
-    postContent: "",
-  }),
   computed: {
-    ...mapState(["userId", "posts"]),
+    ...mapState(["posts"]),
   },
   methods: {
     ...mapActions(["loadPosts"]),

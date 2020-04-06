@@ -69,9 +69,6 @@ export default new Vuex.Store({
           if (res && res.data) {
             commit("setUserData", res.data);
           }
-        })
-        .catch((e) => {
-          console.log(e);
         });
     },
   },
