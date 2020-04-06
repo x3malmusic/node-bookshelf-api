@@ -12,7 +12,7 @@
           src="https://avatars2.githubusercontent.com/u/31676496?s=460&v=4"
           class="mr-4"
         />
-        <vs-button class="small" @click="logOut">Log Out</vs-button>
+        <vs-button class="small" @click="signOut">Log Out</vs-button>
       </div>
     </nav>
     <router-view />
@@ -20,23 +20,22 @@
 </template>
 
 <script>
-import http from "../http";
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "Header",
   methods: {
-    async logOut() {
-      await http
-        .post("/auth/logout")
-        .then(({ data }) => {
-          this.$_notify_success("Success", data.message);
-          this.$router.push("/");
-        })
-        .catch((e) => {
-          this.$_notify_error("Error", e.response.data.message);
-          this.$router.push("/");
-        });
+    ...mapActions(["logOut"]),
+
+    async signOut() {
+      try {
+        await this.logOut();
+        this.$_notify_success("Success", "You've successfully logged out");
+        this.$router.push("/");
+      } catch (e) {
+        this.$_notify_error("Error", "Something went wrong");
+        this.$router.push("/");
+      }
     },
   },
   computed: {

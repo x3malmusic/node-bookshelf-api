@@ -39,6 +39,10 @@ export default new Vuex.Store({
         commit("setPosts", data);
       });
     },
+
+    async logOut() {
+      await http.post("/auth/logout")
+    },
   },
   modules: {},
 });
