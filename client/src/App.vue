@@ -5,23 +5,15 @@
 </template>
 
 <script>
-import http from "./http";
-import { mapMutations } from "vuex";
+import { mapActions } from "vuex";
 
 export default {
   name: "App",
   methods: {
-    ...mapMutations(["setUserData"]),
+    ...mapActions(["getUserData"]),
   },
-  async created() {
-    await http
-      .get("/users/getUser")
-      .then((res) => {
-        if (res && res.data.loggedIn) this.setUserData(res.data);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+  created() {
+    this.getUserData();
   },
 };
 </script>
