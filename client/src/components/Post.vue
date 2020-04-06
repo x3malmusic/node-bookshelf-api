@@ -9,7 +9,7 @@
         :class="postId === post.id ? 'bg-gray-200' : 'bg-transparent'"
         :value="post.title"
       />
-      <vs-button @click="deletePost(post.id)" color="danger" class="small"
+      <vs-button @click="deleteUserPost(post.id)" color="danger" class="small"
         >X</vs-button
       >
     </div>
@@ -48,6 +48,7 @@
 
 <script>
 import http from "../http";
+import { mapActions } from "vuex";
 
 export default {
   name: "Post",
@@ -60,22 +61,20 @@ export default {
     postContent: "",
   }),
   methods: {
-    deletePost(id) {
+    ...mapActions(["deletePost"]),
+    deleteUserPost(id) {
       this.$vs.dialog({
         type: "confirm",
         color: "danger",
         title: `Confirm`,
         text: "Are you sure want to delete this post",
         accept: async () => {
-          await http
-            .delete(`/posts/${id}`)
-            .then(({ data }) => {
-              this.$_notify_success("Success", data.message);
-              this.loadPosts();
-            })
-            .catch((e) => {
-              this.$_notify_error("Error", e.response.data.message);
-            });
+          try {
+            await this.deletePost(id);
+            this.$_notify_success("Success", "Post deleted");
+          } catch (e) {
+            this.$_notify_error("Error", e.response.data.message);
+          }
         },
       });
     },
