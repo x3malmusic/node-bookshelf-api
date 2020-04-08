@@ -26,7 +26,7 @@ export const addPost = async (req, res, next) => {
   } catch (e) {
     next(e);
   }
-  res.status(201).json({ message: "Post added" });
+  res.status(201);
 };
 
 export const updatePost = async (req, res, next) => {
@@ -50,7 +50,7 @@ export const updatePost = async (req, res, next) => {
     } catch (e) {
       next(e);
     }
-    res.status(200).json({ message: "Post updated" });
+    res.status(200);
   }
 };
 
@@ -60,5 +60,5 @@ export const deletePost = async (req, res, next) => {
   } catch (e) {
     next(e);
   }
-  res.status(200).json({ message: "Post deleted" });
+  res.status(200);
 };

@@ -17,6 +17,10 @@ export const register = async (req, res, next) => {
       .fetch({ require: false })
       .catch((e) => next(e));
 
+    if (candidate.attributes.email === email) {
+      return res.status(400).json({ message: "User already exist" });
+    }
+
     if (!candidate) {
       const hashedPassword = await bcrypt.hash(password, 12);
       await User.forge({ email, password: hashedPassword }).save();
@@ -31,15 +35,12 @@ export const register = async (req, res, next) => {
         }
       );
       return res
-        .cookie("token", token, { httpOnly: true })
         .status(201)
-        .json({ userId: user.id, email: user.email });
+        .json({ userId: user.id, email: user.email, token });
     }
-
-    if (candidate.attributes.email === email) {
-      res.status(400).json({ message: "User already exist" });
-    }
-  } catch (e) {}
+  } catch (e) {
+    next(e);
+  }
 };
 
 export const login = async (req, res, next) => {
@@ -73,19 +74,7 @@ export const login = async (req, res, next) => {
         expiresIn: "1h",
       }
     );
-    res
-      .cookie("token", token, { httpOnly: true })
-      .json({ userId: user.id, email: user.attributes.email });
-  } catch (e) {
-    next(e);
-  }
-};
-
-export const logOut = async (req, res, next) => {
-  try {
-    res
-      .clearCookie("token")
-      .json({ message: "You've successfully logged out" });
+    res.json({ userId: user.id, email: user.attributes.email, token });
   } catch (e) {
     next(e);
   }

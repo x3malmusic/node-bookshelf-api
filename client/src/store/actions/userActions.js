@@ -16,6 +16,7 @@ export default {
   async logOut({ commit }) {
     await http.post("/auth/logout");
     commit("clearUserData");
+    localStorage.removeItem("token");
   },
 
   async login({ commit }, { email, password }) {
@@ -27,6 +28,7 @@ export default {
       .then((res) => {
         if (res && res.data) {
           commit("setUserData", res.data);
+          localStorage.setItem("token", res.data.token);
         }
       });
   },
@@ -40,6 +42,7 @@ export default {
       .then((res) => {
         if (res && res.data) {
           commit("setUserData", res.data);
+          localStorage.setItem("token", res.data.token);
         }
       });
   },
