@@ -7,7 +7,11 @@
         :class="active ? 'bg-gray-200' : 'bg-transparent'"
         v-model="post.title"
       />
-      <vs-button @click="deleteUserPost(post.id)" color="danger" class="small"
+      <vs-button
+        v-if="token"
+        @click="deleteUserPost(post.id)"
+        color="danger"
+        class="small"
         >X</vs-button
       >
     </div>
@@ -32,14 +36,17 @@
     <vs-button @click="cancelPost(post)" class="medium px-8 mt-4" v-if="active"
       >Cancel</vs-button
     >
-    <vs-button @click="editPost(post)" class="medium px-8 mt-4" v-if="!active"
+    <vs-button
+      @click="editPost(post)"
+      class="medium px-8 mt-4"
+      v-if="!active && token"
       >Edit</vs-button
     >
   </vs-card>
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
 
 export default {
   name: "Post",
@@ -51,6 +58,9 @@ export default {
     postTitle: "",
     postContent: "",
   }),
+  computed: {
+    ...mapState(["token"]),
+  },
   methods: {
     ...mapActions(["deletePost", "acceptPost"]),
     deleteUserPost(id) {
@@ -93,7 +103,7 @@ export default {
         this.$_notify_success("Success", "Post updated");
       } catch (e) {
         this.cancelPost(post);
-        this.$_notify_error("Error", e);
+        this.$_notify_error("Error", e.response.data.message);
       }
     },
 

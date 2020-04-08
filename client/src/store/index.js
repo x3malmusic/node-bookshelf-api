@@ -12,6 +12,7 @@ export default new Vuex.Store({
     userId: "",
     email: "",
     posts: [],
+    token: "",
   },
 
   mutations: {
