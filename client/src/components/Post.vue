@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions } from "vuex";
 
 export default {
   name: "Post",
@@ -51,9 +51,6 @@ export default {
     postTitle: "",
     postContent: "",
   }),
-  computed: {
-    ...mapState(["posts"]),
-  },
   methods: {
     ...mapActions(["deletePost", "acceptPost"]),
     deleteUserPost(id) {
@@ -64,7 +61,6 @@ export default {
         text: "Are you sure want to delete this post",
         accept: async () => {
           try {
-            console.log(id);
             await this.deletePost(id);
             this.$_notify_success("Success", "Post deleted");
           } catch (e) {
