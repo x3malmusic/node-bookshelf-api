@@ -4,10 +4,8 @@
       <input
         type="text"
         class="font-bold w-full"
-        :ref="`postTitle${post.id}`"
-        :disabled="postId !== post.id"
-        :class="postId === post.id ? 'bg-gray-200' : 'bg-transparent'"
-        :value="post.title"
+        :class="active ? 'bg-gray-200' : 'bg-transparent'"
+        v-model="post.title"
       />
       <vs-button @click="deleteUserPost(post.id)" color="danger" class="small"
         >X</vs-button
@@ -15,10 +13,10 @@
     </div>
     <div
       :ref="`postContent${post.id}`"
-      :contenteditable="postId === post.id"
+      :contenteditable="active"
       v-html="post.content"
       :class="
-        postId === post.id
+        active
           ? 'bg-gray-200 border border-solid border-blue-500 rounded'
           : null
       "
@@ -28,26 +26,20 @@
     <vs-button
       @click="changePost(post)"
       class="medium px-8 mt-4 mr-2"
-      v-if="postId === post.id"
+      v-if="active"
       >Accept</vs-button
     >
-    <vs-button
-      @click="cancelPost(post)"
-      class="medium px-8 mt-4"
-      v-if="postId === post.id"
+    <vs-button @click="cancelPost(post)" class="medium px-8 mt-4" v-if="active"
       >Cancel</vs-button
     >
-    <vs-button
-      @click="editPost(post)"
-      class="medium px-8 mt-4"
-      v-if="!(postId === post.id)"
+    <vs-button @click="editPost(post)" class="medium px-8 mt-4" v-if="!active"
       >Edit</vs-button
     >
   </vs-card>
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
 
 export default {
   name: "Post",
@@ -55,10 +47,13 @@ export default {
     post: Object,
   },
   data: () => ({
-    postId: null,
+    active: false,
     postTitle: "",
     postContent: "",
   }),
+  computed: {
+    ...mapState(["posts"]),
+  },
   methods: {
     ...mapActions(["deletePost", "acceptPost"]),
     deleteUserPost(id) {
@@ -69,6 +64,7 @@ export default {
         text: "Are you sure want to delete this post",
         accept: async () => {
           try {
+            console.log(id);
             await this.deletePost(id);
             this.$_notify_success("Success", "Post deleted");
           } catch (e) {
@@ -79,22 +75,25 @@ export default {
     },
 
     editPost(post) {
-      this.postId = post.id;
-      this.postTitle = this.$refs[`postTitle${post.id}`].value;
+      this.active = true;
+      this.postTitle = post.title;
       this.postContent = this.$refs[`postContent${post.id}`].innerHTML;
-      post.editable = true;
+    },
+
+    clearPrevState() {
+      this.postContent = "";
+      this.postTitle = "";
+      this.active = false;
     },
 
     async changePost(post) {
       try {
         await this.acceptPost({
           post,
-          title: this.$refs[`postTitle${post.id}`].value,
+          title: post.title,
           content: this.$refs[`postContent${post.id}`].innerHTML.trim(),
         });
-        this.postContent = "";
-        this.postTitle = "";
-        this.postId = null;
+        this.clearPrevState();
         this.$_notify_success("Success", "Post updated");
       } catch (e) {
         this.cancelPost(post);
@@ -104,10 +103,8 @@ export default {
 
     cancelPost(post) {
       this.$refs[`postContent${post.id}`].innerHTML = this.postContent;
-      // this.$refs[`postTitle${post.id}`].value = this.postTitle;
-      this.postContent = "";
-      this.postTitle = "";
-      this.postId = null;
+      post.title = this.postTitle;
+      this.clearPrevState();
     },
   },
 };

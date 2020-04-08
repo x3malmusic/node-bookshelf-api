@@ -27,6 +27,10 @@ export default new Vuex.Store({
       state.email = "";
       state.posts = "";
     },
+
+    deletePost(state, id) {
+      state.posts = state.posts.filter((e) => e.id !== id);
+    },
   },
 
   actions: {
