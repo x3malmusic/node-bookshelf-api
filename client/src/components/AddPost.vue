@@ -14,7 +14,7 @@
         v-model="newPostTitle"
       ></vs-input>
       <vs-textarea label="Leave a message" v-model="newPostContent" />
-      <vs-button @click="addPost" class="mr-2 px-8">Accept</vs-button>
+      <vs-button @click="addNewPost" class="mr-2 px-8">Accept</vs-button>
       <vs-button @click="addPostPopupActive = false" class="px-8"
         >Cancel</vs-button
       >
@@ -23,8 +23,7 @@
 </template>
 
 <script>
-import http from "../http";
-import { mapState } from "vuex";
+import { mapActions } from "vuex";
 
 export default {
   name: "AddPost",
@@ -34,24 +33,19 @@ export default {
     newPostContent: "",
   }),
   methods: {
-    async addPost() {
-      await http
-        .post(`/posts/${this.userId}`, {
+    ...mapActions(["addPost"]),
+    async addNewPost() {
+      try {
+        await this.addPost({
           title: this.newPostTitle,
           content: this.newPostContent,
-        })
-        .then(({ data }) => {
-          this.$_notify_success("Success", data.message);
-          this.addPostPopupActive = false;
-          this.loadPosts();
-        })
-        .catch((e) => {
-          this.$_notify_error("Error", e.response.data.message);
         });
+        this.$_notify_success("Success", "Post added");
+        this.addPostPopupActive = false;
+      } catch (e) {
+        this.$_notify_error("Error", e.response.data.message);
+      }
     },
-  },
-  computed: {
-    ...mapState(["userId"]),
   },
 };
 </script>
