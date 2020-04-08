@@ -13,8 +13,7 @@ export default {
     });
   },
 
-  async logOut({ commit }) {
-    await http.post("/auth/logout");
+  logOut({ commit }) {
     commit("clearUserData");
     localStorage.removeItem("token");
   },
