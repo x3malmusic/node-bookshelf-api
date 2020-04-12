@@ -4,9 +4,13 @@ export default {
   async getUserData({ commit }) {
     const token = localStorage.getItem("token");
     if (token) {
-      await http.get("/users/getUser", { token: token }).then((res) => {
-        if (res && res.data.loggedIn) commit("setUserData", res.data);
-      });
+      await http
+        .get("/users/getUser", {
+          headers: { authorization: `Bearer ${token}` },
+        })
+        .then((res) => {
+          if (res && res.data.loggedIn) commit("setUserData", res.data);
+        });
     }
   },
 

@@ -12,7 +12,7 @@
           src="https://avatars2.githubusercontent.com/u/31676496?s=460&v=4"
           class="mr-4"
         />
-        <vs-button class="small" @click="signOut" v-if="token"
+        <vs-button class="small" @click="signOut" v-if="loggedIn"
           >Log Out</vs-button
         >
         <vs-button class="small" @click="signIn" v-else>Log In</vs-button>
@@ -46,7 +46,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(["email", "token"]),
+    ...mapState(["email", "loggedIn"]),
   },
 };
 </script>

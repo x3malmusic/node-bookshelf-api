@@ -8,7 +8,7 @@
         v-model="post.title"
       />
       <vs-button
-        v-if="token"
+        v-if="loggedIn"
         @click="deleteUserPost(post.id)"
         color="danger"
         class="small"
@@ -39,7 +39,7 @@
     <vs-button
       @click="editPost(post)"
       class="medium px-8 mt-4"
-      v-if="!active && token"
+      v-if="!active && loggedIn"
       >Edit</vs-button
     >
   </vs-card>
@@ -59,7 +59,7 @@ export default {
     postContent: "",
   }),
   computed: {
-    ...mapState(["token"]),
+    ...mapState(["loggedIn"]),
   },
   methods: {
     ...mapActions(["deletePost", "acceptPost"]),

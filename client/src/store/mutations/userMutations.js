@@ -2,7 +2,7 @@ export default {
   setUserData(state, data) {
     state.userId = data.userId;
     state.email = data.email;
-    state.token = data.token;
+    state.loggedIn = data.loggedIn;
   },
 
   setPosts(state, posts) {

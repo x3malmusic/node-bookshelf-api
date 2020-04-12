@@ -21,7 +21,7 @@ app.use(
 app.use(express.json({ extended: true }));
 app.use("/auth", auth);
 app.use("/posts", posts);
-app.use("/users", user);
+app.use("/users", verifyToken, user);
 app.use((err, req, res, next) => {
   // res.status(500).json({ message: err.message });
 });

@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 
 export const verifyToken = async (req, res, next) => {
-  const token = req.cookies.token || "";
+  const token = req.headers.authorization.split(" ")[1] || "";
   try {
     if (!token) {
       return res.status(401).json({ loggedIn: false });
@@ -10,7 +10,11 @@ export const verifyToken = async (req, res, next) => {
       if (err) {
         return res.status(403);
       }
-      req.user = { userId: user.userId, email: user.email, loggedIn: true };
+      req.user = {
+        userId: user.userId,
+        email: user.email,
+        loggedIn: true,
+      };
       next();
     });
   } catch (err) {
