@@ -15,9 +15,11 @@ export const getPosts = async (req, res, next) => {
 
 export const addPost = async (req, res, next) => {
   try {
+    console.log(req.body);
     const { title, content } = req.body;
     if (title && title.length > 3) {
       await Post.forge({ user_id: req.params.userId, title, content }).save();
+      res.status(201);
     } else {
       res
         .status(400)
@@ -26,7 +28,6 @@ export const addPost = async (req, res, next) => {
   } catch (e) {
     next(e);
   }
-  res.status(201);
 };
 
 export const updatePost = async (req, res, next) => {

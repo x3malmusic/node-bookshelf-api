@@ -1,7 +1,9 @@
 const jwt = require("jsonwebtoken");
 
 export const verifyToken = async (req, res, next) => {
-  const token = req.headers.authorization.split(" ")[1] || "";
+  const authHeader = req.headers;
+  const token =
+    authHeader.authorization && authHeader.authorization.split(" ")[1];
   try {
     if (!token) {
       return res.status(401).json({ loggedIn: false });

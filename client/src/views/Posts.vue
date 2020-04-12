@@ -1,6 +1,6 @@
 <template>
   <vs-row class="justify-center flex-col items-center">
-    <add-post v-if="token" />
+    <add-post v-if="loggedIn" />
     <vs-col vs-w="2" v-if="!posts.length">
       <vs-card>
         <div slot="header">
@@ -29,7 +29,7 @@ export default {
   },
   name: "Posts",
   computed: {
-    ...mapState(["posts", "token"]),
+    ...mapState(["posts", "loggedIn"]),
   },
   methods: {
     ...mapActions(["loadPosts"]),
