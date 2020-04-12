@@ -2,15 +2,16 @@ import http from "../../http";
 
 export default {
   async getUserData({ commit }) {
-    if (localStorage.getItem("token")) {
-      await http.get("/users/getUser", { token }).then((res) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      await http.get("/users/getUser", { token: token }).then((res) => {
         if (res && res.data.loggedIn) commit("setUserData", res.data);
       });
     }
   },
 
-  async loadPosts({ commit }) {
-    await http.get(`/posts/${this.state.userId}`).then(({ data }) => {
+  async loadPosts({ commit }, id) {
+    await http.get(`/posts/${id}`).then(({ data }) => {
       commit("setPosts", data);
     });
   },

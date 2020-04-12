@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
 
 export default {
   name: "Register",
@@ -38,6 +38,9 @@ export default {
     password: "qweasd",
     confirmPassword: "qweasd",
   }),
+  computed: {
+    ...mapState(["userId"]),
+  },
 
   methods: {
     ...mapActions(["register"]),
@@ -46,7 +49,7 @@ export default {
       if (this.password === this.confirmPassword) {
         try {
           await this.register({ email: this.email, password: this.password });
-          this.$router.push({ name: "posts" });
+          this.$router.push(`${this.userId}/posts`);
           this.$_notify_success("Logged In", "Welcome user");
         } catch (e) {
           this.$_notify_error("Error", e.response.data.message);

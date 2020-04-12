@@ -1,6 +1,5 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import http from "../http";
 
 Vue.use(VueRouter);
 
@@ -22,12 +21,12 @@ const routes = [
     ],
   },
   {
-    path: "/user",
+    path: "/:userId",
     name: "layout",
     component: () => import("../views/Header.vue"),
     children: [
       {
-        path: "/posts",
+        path: "posts",
         name: "posts",
         component: () => import("../views/Posts.vue"),
       },
@@ -39,24 +38,5 @@ const router = new VueRouter({
   mode: "history",
   routes,
 });
-
-// router.beforeEach(async (to, from, next) => {
-//   const { reqAuth } = to.meta;
-//   const user = await http.get("/users/getUser").catch((e) => {});
-//
-//   if (!reqAuth) {
-//     if (user && user.data && user.data.loggedIn) {
-//       return next({ name: "posts" });
-//     } else {
-//       return next();
-//     }
-//   } else if (reqAuth) {
-//     if (user && user.data && user.data.loggedIn) {
-//       return next();
-//     } else {
-//       return next({ name: "auth" });
-//     }
-//   }
-// });
 
 export default router;

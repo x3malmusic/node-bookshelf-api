@@ -1,6 +1,6 @@
 <template>
   <vs-row class="justify-center flex-col items-center">
-    <add-post v-if="token"/>
+    <add-post v-if="token" />
     <vs-col vs-w="2" v-if="!posts.length">
       <vs-card>
         <div slot="header">
@@ -38,7 +38,7 @@ export default {
   async mounted() {
     try {
       this.$vs.loading();
-      await this.$store.dispatch("loadPosts");
+      await this.$store.dispatch("loadPosts", this.$route.params.userId);
     } catch (e) {
       this.$_notify_error("Error", e.response.data.message);
     } finally {

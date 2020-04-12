@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
 
 export default {
   name: "Login",
@@ -29,13 +29,16 @@ export default {
     email: "test@email.com",
     password: "qweasd",
   }),
+  computed: {
+    ...mapState(["userId"]),
+  },
   methods: {
     ...mapActions(["login"]),
 
     async logIn() {
       try {
         await this.login({ email: this.email, password: this.password });
-        this.$router.push({ name: "posts" });
+        this.$router.push(`${this.userId}/posts`);
         this.$_notify_success("Logged In", "Welcome user");
       } catch (e) {
         this.$_notify_error("Error", e.response.data.message);

@@ -12,7 +12,10 @@
           src="https://avatars2.githubusercontent.com/u/31676496?s=460&v=4"
           class="mr-4"
         />
-        <vs-button class="small" @click="signOut">Log Out</vs-button>
+        <vs-button class="small" @click="signOut" v-if="token"
+          >Log Out</vs-button
+        >
+        <vs-button class="small" @click="signIn" v-else>Log In</vs-button>
       </div>
     </nav>
     <router-view />
@@ -37,9 +40,13 @@ export default {
         this.$router.push("/");
       }
     },
+
+    signIn() {
+      this.$router.push({ name: "login" });
+    },
   },
   computed: {
-    ...mapState(["email"]),
+    ...mapState(["email", "token"]),
   },
 };
 </script>
