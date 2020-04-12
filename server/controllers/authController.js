@@ -36,7 +36,7 @@ export const register = async (req, res, next) => {
       );
       return res
         .status(201)
-        .json({ userId: user.id, email: user.email, token });
+        .json({ userId: user.id, email: user.email, token, loggedIn: true });
     }
   } catch (e) {
     next(e);
@@ -74,7 +74,12 @@ export const login = async (req, res, next) => {
         expiresIn: "1h",
       }
     );
-    res.json({ userId: user.id, email: user.attributes.email, token });
+    res.json({
+      userId: user.id,
+      email: user.attributes.email,
+      token,
+      loggedIn: true,
+    });
   } catch (e) {
     next(e);
   }
